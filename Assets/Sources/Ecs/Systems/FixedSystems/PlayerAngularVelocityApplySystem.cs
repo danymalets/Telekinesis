@@ -29,7 +29,7 @@ namespace Sources.Ecs.Systems.FixedSystems
             {
                 Rigidbody rigidbody = playerEntity.GetComponentReference<Rigidbody>();
 
-                rigidbody.angularVelocity = angularSpeed * Vector3.up;
+                rigidbody.angularVelocity = angularSpeed * Vector3.up * Mathf.Deg2Rad;
             }
         }
 

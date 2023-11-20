@@ -24,7 +24,6 @@ namespace Sources.Ecs
             fixedGroup.AddSystem(new PlayerAngularVelocityApplySystem());
             fixedGroup.AddSystem(new VelocityApplySystem());
             fixedGroup.AddSystem(new ObjectInHandProgressSystem());
-            fixedGroup.AddSystem(new ConnectObjectSystem());
             fixedGroup.AddFixedOneFrame<CollisionEvent>();
             
             // update systems

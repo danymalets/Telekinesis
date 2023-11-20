@@ -15,6 +15,7 @@ namespace Sources.Ecs.Systems.UpdateSystems
         {
             _filter = World.Filter
                 .WithMonoReference<Transform>()
+                .WithMonoReference<FixedJoint>()
                 .With<ObjectInHand>()
                 .Without<ObjectConnected>()
                 .Build();
@@ -24,6 +25,7 @@ namespace Sources.Ecs.Systems.UpdateSystems
         {
             foreach (Entity entity in _filter)
             {
+                FixedJoint fixedJoint = entity.GetComponentReference<FixedJoint>();
                 Transform transform = entity.GetComponentReference<Transform>();
                 
                 Vector3 targetPosition = transform.position + transform.rotation * Balance.PickableRelatedPosition;
@@ -34,8 +36,17 @@ namespace Sources.Ecs.Systems.UpdateSystems
                 float progress = Mathf.Clamp01(objectInHand.Time / Balance.ObjectMoveTime);
 
                 Transform pickableTransform = pickable.GetComponentReference<Transform>();
+                Rigidbody pickableRigidbody = pickable.GetComponentReference<Rigidbody>();
 
                 pickableTransform.position = Vector3.Lerp(objectInHand.StartPosition, targetPosition, progress);
+
+                if (objectInHand.Time >= Balance.ObjectMoveTime)
+                {
+                    pickableRigidbody.angularVelocity = Vector3.zero;
+                    pickableRigidbody.velocity = Vector3.zero;
+                    fixedJoint.connectedBody = pickableRigidbody;
+                    entity.AddComponent<ObjectConnected>();
+                }
             }
         }
 
